@@ -1,12 +1,12 @@
 # hacker_token_panel_v4.py
-# Final Premium Hacker Style Token Checker with "Copy Alive Tokens"
+# Premium Token Checker with Login + Copy Alive Tokens + Logout
 
-import os, requests
+import requests
 from flask import Flask, request, session, redirect, url_for, render_template_string
 
-# ---------------- Settings ----------------
 APP_TITLE = "Harshu Token Checker Tool"
 USERS = {"admin": "pass123"}  # login credentials
+
 app = Flask(__name__)
 app.secret_key = "supersecretkey"
 
@@ -20,13 +20,9 @@ def mask_token(tok: str) -> str:
     return tok[:8] + "..." + tok[-6:]
 
 def check_token(token: str):
-    """Check token validity via Facebook Graph API"""
     try:
-        r = requests.get(
-            "https://graph.facebook.com/me",
-            params={"access_token": token},
-            timeout=10,
-        )
+        r = requests.get("https://graph.facebook.com/me",
+                         params={"access_token": token}, timeout=10)
         data = r.json()
         if "id" in data:
             return {"status": "valid", "id": data["id"], "name": data.get("name", "")}
@@ -79,12 +75,7 @@ def dashboard():
                 "id": res["id"],
                 "name": res["name"]
             })
-        summary = {
-            "total": len(tokens),
-            "active": active,
-            "dead": dead,
-            "error": error
-        }
+        summary = {"total": len(tokens), "active": active, "dead": dead, "error": error}
 
     return render_template_string(DASHBOARD_HTML, title=APP_TITLE, user=session["user"],
                                   results=results, summary=summary, alive_tokens=alive_tokens)
@@ -195,13 +186,14 @@ DASHBOARD_HTML = """
   </table>
   {% endif %}
   <div class="footer">
-    Made with 💚 by Harshu | <a href="https://m.me/harshuuuxd" target="_blank">Contact Me</a>
+    Made with ❤️ by Harshu | 
+    <a href="https://m.me/harshuuuxd" target="_blank">Contact Me</a> | 
+    <a href="{{ url_for('logout') }}">🚪 Logout</a>
   </div>
 </body>
 </html>
 """
 
-# ---------------- Main ----------------
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
-        
+    
