@@ -1,109 +1,124 @@
-# hacker_token_panel_v4.py (FULL FINAL VERSION)
-# Premium Facebook Token Checker Panel
-# Features:
-#  - Login system (multi-user, with harshu001/harshking90)
-#  - Dashboard with token input
-#  - Bulk token checking (Facebook Graph API)
-#  - History save per user (CSV, JSON)
-#  - Download history CSV
-#  - Premium HTML templates with banner, footer
-#  - Root route redirects to login
+# hacker_token_panel_v4.py
+# Premium Hacker Style Facebook Token Checker
 
-import os, io, csv, uuid, time, json, datetime, pathlib
-from concurrent.futures import ThreadPoolExecutor, as_completed
-from flask import Flask, request, session, redirect, url_for, send_file, render_template_string, flash
 import requests
-
-APP_TITLE = "Harshu Token Checker Tool"
-HISTORY_DIR = pathlib.Path("history")
-HISTORY_DIR.mkdir(exist_ok=True, parents=True)
-
-# Updated credentials
-DEFAULT_USERS = {
-    "harshu001": "harshking90"
-}
-USERS = json.loads(os.environ.get("USERS_JSON", json.dumps(DEFAULT_USERS)))
-
-MAX_TOKENS = int(os.environ.get("MAX_TOKENS", "1500"))
-MAX_WORKERS = int(os.environ.get("MAX_WORKERS", "20"))
-DEFAULT_TIMEOUT = 15
-MAX_RETRIES = 3
-BACKOFF = 1.5
+from flask import Flask, request, redirect, url_for, session, render_template_string
 
 app = Flask(__name__)
-app.secret_key = os.environ.get("FLASK_SECRET_KEY", "change_this_secret")
+app.secret_key = "supersecretkey"
 
-# ---------------- Utils ----------------
-def is_authed():
-    return bool(session.get("user"))
+# ---------------- CONFIG ----------------
+USERNAME = "admin"
+PASSWORD = "pass123"
 
-def current_user():
-    return session.get("user")
+# ---------------- HTML ------------------
+LOGIN_HTML = """
+<!doctype html>
+<html>
+<head>
+  <title>Harshu Token Checker</title>
+  <style>
+    body { background-color: black; color: #00ff00; font-family: monospace; text-align:center; }
+    .box { border: 2px solid #00ff00; padding: 20px; display: inline-block; margin-top: 100px; }
+    input, textarea { width: 90%; padding: 8px; margin: 5px; background: black; border: 1px solid #00ff00; color: #00ff00; }
+    button { padding: 8px 16px; background: #00ff00; border: none; color: black; font-weight: bold; cursor: pointer; }
+    h2 { color: #00ff00; }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h2>🔐 Login - Harshu Token Checker</h2>
+    <form method="post">
+      <input type="text" name="username" placeholder="Username"><br>
+      <input type="password" name="password" placeholder="Password"><br>
+      <button type="submit">Login</button>
+    </form>
+  </div>
+</body>
+</html>
+"""
 
-def ensure_user_history_dir(username: str) -> pathlib.Path:
-    d = HISTORY_DIR / username
-    d.mkdir(exist_ok=True, parents=True)
-    return d
+DASHBOARD_HTML = """
+<!doctype html>
+<html>
+<head>
+  <title>Harshu Token Checker Tool</title>
+  <style>
+    body { background-color: black; color: #00ff00; font-family: monospace; text-align:center; }
+    textarea { width: 90%; height: 200px; margin: 10px; background: black; border: 2px solid #00ff00; color: #00ff00; padding: 10px; }
+    button { padding: 10px 20px; background: #00ff00; border: none; color: black; font-weight: bold; cursor: pointer; }
+    table { margin: 20px auto; border-collapse: collapse; width: 90%; }
+    th, td { border: 1px solid #00ff00; padding: 8px; }
+    h1 { color: #00ff00; }
+    footer { margin-top: 30px; font-size: 14px; }
+    a { color: #00ff00; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <pre>
+══════════════════════════════════
+     ✦ Harshu Token Checker ✦  
+       ⚡ Hacker Vibes Only ⚡
+══════════════════════════════════
+  </pre>
 
-def mask_token_display(tok: str, mask: bool) -> str:
-    if not mask:
-        return tok
-    if len(tok) <= 12:
-        return tok[:6] + "..."
-    return tok[:8] + "..." + tok[-6:]
+  <h1>Enter Tokens Below</h1>
+  <form method="post">
+    <textarea name="tokens" placeholder="Enter one token per line..."></textarea><br>
+    <button type="submit">Check Tokens</button>
+  </form>
 
-# HTTP helper, Graph API functions, token check logic here...
-# (full implementations unchanged from earlier long version)
+  {% if results %}
+  <h2>Results</h2>
+  <table>
+    <tr><th>Token</th><th>Status</th></tr>
+    {% for t, status in results %}
+      <tr><td>{{t}}</td><td>{{status}}</td></tr>
+    {% endfor %}
+  </table>
+  {% endif %}
 
-# ---------------- Routes ----------------
+  <footer>
+    Made with 💕 by Harshu | <a href="https://m.me/harshuuuxd" target="_blank">Contact Me</a>
+  </footer>
+</body>
+</html>
+"""
 
-@app.route("/")
-def root():
-    return redirect(url_for("login"))
-
-@app.route("/login", methods=["GET","POST"])
+# ---------------- ROUTES ----------------
+@app.route("/", methods=["GET","POST"])
 def login():
     if request.method == "POST":
-        u = request.form.get("username","").strip()
-        p = request.form.get("password","").strip()
-        if u in USERS and USERS[u] == p:
+        u = request.form.get("username")
+        p = request.form.get("password")
+        if u == USERNAME and p == PASSWORD:
             session["user"] = u
             return redirect(url_for("dashboard"))
-        else:
-            flash("Invalid username/password","danger")
-    return render_template_string("""
-    <!doctype html>
-    <html><head><title>{{title}}</title></head>
-    <body>
-      <h2>🔐 Login to {{title}}</h2>
-      <form method=post>
-        <input name=username placeholder="Username"><br>
-        <input name=password type=password placeholder="Password"><br>
-        <button type=submit>Login</button>
-      </form>
-    </body></html>
-    """, title=APP_TITLE)
+    return render_template_string(LOGIN_HTML)
 
 @app.route("/dashboard", methods=["GET","POST"])
 def dashboard():
-    if not is_authed():
+    if "user" not in session:
         return redirect(url_for("login"))
-    # token input, checking, saving results, render table (premium HTML)
-    return "<h2>Dashboard (Premium Token Checker)</h2>"
 
-@app.route("/history")
-def history():
-    if not is_authed():
-        return redirect(url_for("login"))
-    return "<h2>History Page (list runs here)</h2>"
+    results = []
+    if request.method == "POST":
+        tokens = request.form.get("tokens", "").splitlines()
+        for t in tokens:
+            t = t.strip()
+            if not t: continue
+            try:
+                r = requests.get(f"https://graph.facebook.com/me?access_token={t}", timeout=5)
+                if r.status_code == 200 and "id" in r.json():
+                    results.append((t[:10]+"...", "✅ VALID"))
+                else:
+                    results.append((t[:10]+"...", "❌ INVALID"))
+            except:
+                results.append((t[:10]+"...", "⚠️ ERROR"))
 
-@app.route("/download/<run_id>")
-def download_csv(run_id):
-    if not is_authed():
-        return redirect(url_for("login"))
-    return "Download CSV logic"
+    return render_template_string(DASHBOARD_HTML, results=results)
 
-# ---------------- Main ----------------
+# ---------------- MAIN ----------------
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(host="0.0.0.0", port=5000)
     
