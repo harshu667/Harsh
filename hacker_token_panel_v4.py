@@ -1,5 +1,5 @@
 # hacker_token_panel_v4.py
-# Premium Hacker Style Facebook Token Checker
+# OG Hacker Style Token Checker (Harshu Edition)
 
 import requests
 from flask import Flask, request, redirect, url_for, session, render_template_string
@@ -16,23 +16,28 @@ LOGIN_HTML = """
 <!doctype html>
 <html>
 <head>
-  <title>Harshu Token Checker</title>
+  <title>Harshu Token Checker - Login</title>
   <style>
     body { background-color: black; color: #00ff00; font-family: monospace; text-align:center; }
     .box { border: 2px solid #00ff00; padding: 20px; display: inline-block; margin-top: 100px; }
-    input, textarea { width: 90%; padding: 8px; margin: 5px; background: black; border: 1px solid #00ff00; color: #00ff00; }
+    input { width: 90%; padding: 8px; margin: 5px; background: black; border: 1px solid #00ff00; color: #00ff00; }
     button { padding: 8px 16px; background: #00ff00; border: none; color: black; font-weight: bold; cursor: pointer; }
     h2 { color: #00ff00; }
+    footer { margin-top: 15px; font-size: 14px; }
+    a { color: #00ff00; text-decoration: none; }
   </style>
 </head>
 <body>
   <div class="box">
-    <h2>🔐 Login - Harshu Token Checker</h2>
+    <h2>🔐 Harshu Token Checker Login</h2>
     <form method="post">
       <input type="text" name="username" placeholder="Username"><br>
       <input type="password" name="password" placeholder="Password"><br>
       <button type="submit">Login</button>
     </form>
+    <footer>
+      Made with 💕 by Harshu | <a href="https://m.me/harshuuuxd" target="_blank">Contact Me</a>
+    </footer>
   </div>
 </body>
 </html>
@@ -58,7 +63,7 @@ DASHBOARD_HTML = """
   <pre>
 ══════════════════════════════════
      ✦ Harshu Token Checker ✦  
-       ⚡ Hacker Vibes Only ⚡
+       ⚡ Hatters ki maki chut ☠️⚡
 ══════════════════════════════════
   </pre>
 
@@ -110,15 +115,15 @@ def dashboard():
             try:
                 r = requests.get(f"https://graph.facebook.com/me?access_token={t}", timeout=5)
                 if r.status_code == 200 and "id" in r.json():
-                    results.append((t[:10]+"...", "✅ VALID"))
+                    results.append((t[:8]+"..."+t[-6:], "✅ VALID"))
                 else:
-                    results.append((t[:10]+"...", "❌ INVALID"))
+                    results.append((t[:8]+"..."+t[-6:], "❌ INVALID"))
             except:
-                results.append((t[:10]+"...", "⚠️ ERROR"))
+                results.append((t[:8]+"..."+t[-6:], "⚠️ ERROR"))
 
     return render_template_string(DASHBOARD_HTML, results=results)
 
 # ---------------- MAIN ----------------
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
-    
+  
