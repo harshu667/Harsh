@@ -1,5 +1,5 @@
 # hacker_token_panel_v4.py
-# OG Hacker Style Token Checker (Harshu Edition)
+# Premium Hacker Style Token Checker (Harshu Edition)
 
 import requests
 from flask import Flask, request, redirect, url_for, session, render_template_string
@@ -18,17 +18,43 @@ LOGIN_HTML = """
 <head>
   <title>Harshu Token Checker - Login</title>
   <style>
-    body { background-color: black; color: #00ff00; font-family: monospace; text-align:center; }
-    .box { border: 2px solid #00ff00; padding: 20px; display: inline-block; margin-top: 100px; }
-    input { width: 90%; padding: 8px; margin: 5px; background: black; border: 1px solid #00ff00; color: #00ff00; }
-    button { padding: 8px 16px; background: #00ff00; border: none; color: black; font-weight: bold; cursor: pointer; }
-    h2 { color: #00ff00; }
+    body { background-color: black; color: #00ff00; font-family: monospace; }
+    .login-box {
+      width: 350px;
+      margin: 120px auto;
+      padding: 20px;
+      border: 2px solid #00ff00;
+      border-radius: 12px;
+      box-shadow: 0 0 20px #00ff00;
+      text-align: center;
+    }
+    h2 {
+      color: #00ff00;
+      text-shadow: 0 0 10px #00ff00;
+      animation: flicker 1.5s infinite alternate;
+    }
+    @keyframes flicker {
+      from { opacity: 1; }
+      to { opacity: 0.7; }
+    }
+    input {
+      width: 90%; padding: 10px; margin: 10px 0;
+      background: black; border: 1px solid #00ff00;
+      color: #00ff00; border-radius: 6px;
+    }
+    input:focus { outline: none; box-shadow: 0 0 10px #00ff00; }
+    button {
+      padding: 10px 20px; background: #00ff00; border: none;
+      border-radius: 6px; font-weight: bold; cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover { background: black; color: #00ff00; border: 1px solid #00ff00; }
     footer { margin-top: 15px; font-size: 14px; }
     a { color: #00ff00; text-decoration: none; }
   </style>
 </head>
 <body>
-  <div class="box">
+  <div class="login-box">
     <h2>🔐 Harshu Token Checker Login</h2>
     <form method="post">
       <input type="text" name="username" placeholder="Username"><br>
@@ -36,7 +62,8 @@ LOGIN_HTML = """
       <button type="submit">Login</button>
     </form>
     <footer>
-      Made with 💕 by Harshu | <a href="https://m.me/harshuuuxd" target="_blank">Contact Me</a>
+      Made with 💕 by Harshu<br>
+      <a href="https://m.me/harshuuuxd" target="_blank">Contact Me</a>
     </footer>
   </div>
 </body>
@@ -50,28 +77,58 @@ DASHBOARD_HTML = """
   <title>Harshu Token Checker Tool</title>
   <style>
     body { background-color: black; color: #00ff00; font-family: monospace; text-align:center; }
-    textarea { width: 90%; height: 200px; margin: 10px; background: black; border: 2px solid #00ff00; color: #00ff00; padding: 10px; }
-    button { padding: 10px 20px; background: #00ff00; border: none; color: black; font-weight: bold; cursor: pointer; }
-    table { margin: 20px auto; border-collapse: collapse; width: 90%; }
-    th, td { border: 1px solid #00ff00; padding: 8px; }
-    h1 { color: #00ff00; }
-    footer { margin-top: 30px; font-size: 14px; }
+    .banner {
+      font-size: 18px; font-weight: bold;
+      text-shadow: 0 0 10px #00ff00;
+      margin-top: 20px; margin-bottom: 20px;
+    }
+    .card {
+      width: 80%; margin: auto; padding: 20px;
+      border: 2px solid #00ff00; border-radius: 12px;
+      box-shadow: 0 0 20px #00ff00;
+    }
+    textarea {
+      width: 95%; height: 200px; margin: 10px auto;
+      background: black; border: 2px solid #00ff00; border-radius: 8px;
+      color: #00ff00; padding: 10px;
+    }
+    button {
+      padding: 10px 20px; margin-top: 10px;
+      background: #00ff00; border: none; border-radius: 6px;
+      font-weight: bold; cursor: pointer; transition: 0.3s;
+    }
+    button:hover { background: black; color: #00ff00; border: 1px solid #00ff00; }
+    table {
+      margin: 20px auto; border-collapse: collapse; width: 80%;
+      box-shadow: 0 0 10px #00ff00;
+    }
+    th, td {
+      border: 1px solid #00ff00; padding: 10px;
+    }
+    tr:nth-child(even) { background: #001a00; }
+    tr:hover { background: #003300; }
+    footer {
+      margin-top: 30px; font-size: 14px;
+      border-top: 1px solid #00ff00; padding-top: 10px;
+    }
     a { color: #00ff00; text-decoration: none; }
   </style>
 </head>
 <body>
-  <pre>
+  <div class="banner">
+══════════════════════════════════<br>
+     ✦ Harshu Token Checker ✦  <br>
+       ⚡ Hatters ki maki chut ☠️⚡<br>
 ══════════════════════════════════
-     ✦ Harshu Token Checker ✦  
-       ⚡ Hatters ki maki chut ☠️⚡
-══════════════════════════════════
-  </pre>
+  </div>
 
-  <h1>Enter Tokens Below</h1>
-  <form method="post">
-    <textarea name="tokens" placeholder="Enter one token per line..."></textarea><br>
-    <button type="submit">Check Tokens</button>
-  </form>
+  <div class="card">
+    <h2>Paste Tokens Below</h2>
+    <form method="post">
+      <textarea name="tokens" placeholder="Enter one token per line..."></textarea><br>
+      <button type="submit">Check Tokens</button>
+    </form>
+  </div>
 
   {% if results %}
   <h2>Results</h2>
