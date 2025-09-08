@@ -1,16 +1,16 @@
-# hacker_token_panel_v4.py
-# Premium Hacker Style Token Checker (Neon Glassmorphism Look)
+# hacker_token_panel_v6.py
+# Ultra Premium Rainbow Wave Token Checker with Animated Borders
 
 import requests
 from flask import Flask, request, session, redirect, url_for, render_template_string
 
 APP_TITLE = "Harshu Token Checker Tool"
-USERS = {"Harshu00": "Harshu_don"}  # login credentials
+USERS = {"Harshu00": "Harshu_don"}
 
 app = Flask(__name__)
 app.secret_key = "supersecretkey"
 
-# ---------------- Utils ----------------
+# Utils
 def is_authed():
     return "user" in session
 
@@ -33,7 +33,6 @@ def check_token(token: str):
     except Exception:
         return {"status": "error", "id": None, "name": None}
 
-# ---------------- Routes ----------------
 @app.route("/")
 def root():
     return redirect(url_for("login"))
@@ -85,107 +84,55 @@ def logout():
     session.clear()
     return redirect(url_for("login"))
 
-# ---------------- HTML Templates ----------------
+# -------- HTML with Rainbow Borders --------
 LOGIN_HTML = """
 <!DOCTYPE html>
 <html>
 <head>
   <title>{{title}} - Login</title>
   <style>
+    @keyframes rainbow {0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+    @keyframes borderGlow {0%{border-image-source:linear-gradient(270deg,#ff00cc,#00ffff,#ff9900,#33ff00,#ff0000,#6600ff);}50%{border-image-source:linear-gradient(270deg,#6600ff,#ff0000,#33ff00,#ff9900,#00ffff,#ff00cc);}100%{border-image-source:linear-gradient(270deg,#ff00cc,#00ffff,#ff9900,#33ff00,#ff0000,#6600ff);}}
+
     body {
-      margin:0;
-      height:100vh;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
-      font-family: 'Poppins', sans-serif;
-      color:white;
+      margin:0; height:100vh; display:flex; justify-content:center; align-items:center;
+      background:linear-gradient(270deg,#ff00cc,#00ffff,#ff9900,#33ff00,#ff0000,#6600ff);
+      background-size:1200% 1200%; animation:rainbow 20s ease infinite;
+      font-family:'Poppins',sans-serif; color:white;
     }
     .login-box {
-      background: rgba(255,255,255,0.05);
-      backdrop-filter: blur(12px);
-      border-radius:20px;
-      padding:40px 30px;
-      text-align:center;
-      width:340px;
-      box-shadow:0 0 25px rgba(0,255,255,0.4);
-      border:1px solid rgba(0,255,255,0.2);
+      background:rgba(0,0,0,0.6); backdrop-filter:blur(14px);
+      border-radius:25px; padding:50px 35px; text-align:center; width:400px;
+      box-shadow:0 0 40px rgba(255,255,255,0.5);
+      border:6px solid transparent; border-image-slice:1;
+      animation:borderGlow 8s linear infinite;
     }
-    h2 {
-      font-size:26px;
-      margin-bottom:25px;
-      font-weight:700;
-      color:#fff;
-      text-shadow:0 0 15px #00ffff, 0 0 30px #ff00ff;
-    }
-    input {
-      width:100%;
-      padding:12px;
-      margin:10px 0;
-      border:none;
-      border-radius:12px;
-      outline:none;
-      background:rgba(0,0,0,0.3);
-      color:#fff;
-      font-size:15px;
-      border:1px solid rgba(0,255,255,0.3);
-      transition:0.3s;
-    }
-    input:focus {
-      border-color:#00ffff;
-      box-shadow:0 0 10px #00ffff;
-    }
-    button {
-      width:100%;
-      padding:12px;
-      margin-top:15px;
-      background: linear-gradient(90deg,#ff00cc,#00ffff);
-      border:none;
-      border-radius:12px;
-      color:white;
-      font-weight:bold;
-      font-size:16px;
-      cursor:pointer;
-      transition:0.3s;
-    }
-    button:hover {
-      transform:scale(1.05);
-      box-shadow:0 0 20px #ff00cc, 0 0 25px #00ffff;
-    }
-    .footer {
-      margin-top:18px;
-      font-size:13px;
-      color:#ccc;
-    }
-    .footer span {
-      background: linear-gradient(90deg,#ff00cc,#00ffff);
-      -webkit-background-clip: text;
-      color: transparent;
-      font-weight:bold;
-    }
-    .footer a {
-      display:block;
-      margin-top:5px;
-      text-decoration:none;
-      color:#00ffff;
-      font-weight:bold;
-    }
+    h1 {font-size:36px;margin-bottom:10px;font-weight:800;background:linear-gradient(90deg,#ff00cc,#00ffff,#ff9900);
+      -webkit-background-clip:text;color:transparent;text-shadow:0 0 25px #00ffff;}
+    h3 {margin-bottom:30px;font-weight:500;color:#eee;}
+    input {width:100%;padding:15px;margin:12px 0;border:none;border-radius:15px;outline:none;
+      background:rgba(255,255,255,0.1);color:#fff;font-size:16px;border:2px solid transparent;border-image-slice:1;
+      animation:borderGlow 6s linear infinite;}
+    input:focus {box-shadow:0 0 15px #00ffff;}
+    button {width:100%;padding:15px;margin-top:20px;background:linear-gradient(90deg,#ff00cc,#00ffff,#ff9900);
+      border:none;border-radius:15px;color:white;font-weight:bold;font-size:18px;cursor:pointer;
+      box-shadow:0 0 15px #00ffff;transition:0.3s;}
+    button:hover {transform:scale(1.08);box-shadow:0 0 30px #ff00cc,0 0 30px #00ffff;}
+    .footer {margin-top:22px;font-size:15px;color:#ddd;}
+    .footer span {background:linear-gradient(90deg,#ff00cc,#00ffff);-webkit-background-clip:text;color:transparent;font-weight:bold;}
   </style>
 </head>
 <body>
   <div class="login-box">
-    <h2>Login to continue</h2>
+    <h1>HARSHU TOOL</h1>
+    <h3>Login to continue</h3>
     {% if error %}<p style="color:red">{{error}}</p>{% endif %}
     <form method="post">
       <input type="text" name="username" placeholder="Username" required>
       <input type="password" name="password" placeholder="Password" required>
       <button type="submit">Login</button>
     </form>
-    <div class="footer">
-      Made with ❤️ by <span>Harshu</span><br>
-      <a href="https://m.me/harshuuuxd" target="_blank">📩 Contact Me</a>
-    </div>
+    <div class="footer">Made with ❤️ by <span>Harshu</span></div>
   </div>
 </body>
 </html>
@@ -197,68 +144,73 @@ DASHBOARD_HTML = """
 <head>
   <title>{{title}} - Dashboard</title>
   <style>
-    body { margin:0; background:black; color:#00ffcc; font-family: monospace; display:flex; flex-direction:column; min-height:100vh; }
-    .container { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; padding:20px; }
-    .banner { text-align:center; font-size:22px; font-weight:bold; margin-bottom:20px; color:#ff00cc; text-shadow:0 0 15px #00ffff; }
-    textarea { width:90%; max-width:700px; height:120px; background:black; color:#00ffcc; border:2px solid #00ffcc; border-radius:8px; padding:10px; }
-    button { background: linear-gradient(90deg,#ff00cc,#00ffff); border:none; padding:10px 20px; margin-top:10px; color:white; font-weight:bold; cursor:pointer; border-radius:6px; }
-    button:hover { box-shadow:0 0 15px #ff00cc, 0 0 15px #00ffff; }
-    .summary { margin:20px auto; padding:15px; border-radius:12px; width:70%; text-align:center; max-width:500px;
-               background:rgba(255,255,255,0.05); backdrop-filter:blur(10px); box-shadow:0 0 20px rgba(0,255,255,0.3); }
-    .card { background:rgba(0,255,128,0.05); border:1px solid #00ffcc; border-radius:12px; padding:12px; margin:10px auto; width:90%; max-width:700px; box-shadow:0 0 12px #00ffcc; }
-    .footer { text-align:center; padding:12px; font-size:14px; color:#00ffcc; border-top:1px solid #00ffcc; margin-top:20px; }
-    .footer a { color:#ff00cc; font-weight:bold; text-decoration:none; }
+    @keyframes rainbow {0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+    @keyframes borderGlow {0%{border-image-source:linear-gradient(270deg,#ff00cc,#00ffff,#ff9900,#33ff00,#ff0000,#6600ff);}50%{border-image-source:linear-gradient(270deg,#6600ff,#ff0000,#33ff00,#ff9900,#00ffff,#ff00cc);}100%{border-image-source:linear-gradient(270deg,#ff00cc,#00ffff,#ff9900,#33ff00,#ff0000,#6600ff);}}
+
+    body {margin:0;background:linear-gradient(270deg,#ff00cc,#00ffff,#ff9900,#33ff00,#ff0000,#6600ff);
+      background-size:1200% 1200%;animation:rainbow 25s ease infinite;color:#00ffcc;font-family:monospace;
+      display:flex;flex-direction:column;min-height:100vh;}
+    .container {flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:25px;}
+    .banner {text-align:center;font-size:32px;font-weight:bold;margin-bottom:30px;color:#fff;
+      text-shadow:0 0 20px #00ffff,0 0 30px #ff00ff;}
+    textarea {width:95%;max-width:850px;height:200px;background:rgba(0,0,0,0.6);color:#00ffcc;
+      border:6px solid transparent;border-image-slice:1;animation:borderGlow 10s linear infinite;
+      border-radius:15px;padding:18px;font-size:16px;backdrop-filter:blur(10px);}
+    button {background:linear-gradient(90deg,#ff00cc,#00ffff,#ff9900);border:none;padding:15px 30px;
+      margin-top:20px;color:white;font-weight:bold;cursor:pointer;border-radius:12px;font-size:18px;
+      box-shadow:0 0 15px #00ffff;transition:0.3s;}
+    button:hover {box-shadow:0 0 30px #ff00cc,0 0 30px #00ffff;transform:scale(1.08);}
+    .card {background:rgba(255,255,255,0.08);border:4px solid transparent;border-image-slice:1;
+      animation:borderGlow 12s linear infinite;border-radius:18px;padding:18px;margin:15px auto;
+      width:95%;max-width:850px;box-shadow:0 0 20px #00ffff;font-size:16px;color:#fff;}
+    .summary {margin:30px auto;padding:25px;border:4px solid transparent;border-image-slice:1;
+      animation:borderGlow 8s linear infinite;border-radius:18px;width:80%;max-width:650px;
+      background:rgba(0,0,0,0.6);backdrop-filter:blur(12px);box-shadow:0 0 30px rgba(0,255,255,0.6);
+      text-align:center;font-size:17px;color:#fff;}
+    .footer {text-align:center;padding:25px;font-size:17px;color:#fff;border-top:2px solid rgba(255,255,255,0.3);
+      margin-top:35px;backdrop-filter:blur(8px);background:rgba(0,0,0,0.5);}
+    .footer a {display:inline-block;margin:0 12px;padding:12px 22px;border-radius:10px;
+      background:linear-gradient(90deg,#ff00cc,#00ffff,#ff9900);color:white;font-weight:bold;text-decoration:none;
+      box-shadow:0 0 18px #00ffff;transition:0.3s;}
+    .footer a:hover {box-shadow:0 0 30px #ff00cc,0 0 30px #00ffff;transform:scale(1.08);}
   </style>
-  <script>
-    function copyAlive() {
-      var txt = document.getElementById("aliveTokens");
-      txt.style.display = "block";
-      txt.select();
-      document.execCommand("copy");
-      txt.style.display = "none";
-      alert("✅ Alive tokens copied!");
-    }
-  </script>
 </head>
 <body>
   <div class="container">
-    <div class="banner">
-      ✦ Harshu Token Checker ✦ <br>
-      <span style="color:#ff4444; text-shadow:0 0 10px #ff0000;">⚡ Haters ki maki chut ☠️⚡</span>
-    </div>
+    <div class="banner">✦ Harshu Token Checker ✦<br><span style="color:#ffea00;">🌈 Rainbow Premium Panel 🌈</span></div>
     <form method="post">
       <textarea name="tokens" placeholder="Enter tokens here (one per line)..."></textarea><br>
-      <button type="submit">Check Tokens</button>
+      <button type="submit">🚀 Check Tokens</button>
     </form>
     {% if summary %}
     <div class="summary">
-      <b>Total:</b> {{summary.total}} |
-      ✅ Active: {{summary.active}} |
-      ❌ Dead: {{summary.dead}} |
-      ⚠️ Errors: {{summary.error}}
+      <b>Total:</b> {{summary.total}} | ✅ Active: {{summary.active}} | ❌ Dead: {{summary.dead}} | ⚠️ Errors: {{summary.error}}
       {% if summary.active > 0 %}
-        <br><br>
-        <button onclick="copyAlive()">📋 Copy Alive Tokens</button>
+        <br><br><button onclick="copyAlive()">📋 Copy Alive Tokens</button>
         <textarea id="aliveTokens" style="display:none;">{% for t in alive_tokens %}{{t}}&#10;{% endfor %}</textarea>
       {% endif %}
     </div>
     {% for r in results %}
-      <div class="card">
-        <b>🔑 Token:</b> {{r.token}} <br>
-        <b>Status:</b>
-        {% if r.status == 'valid' %}✅ Valid{% elif r.status == 'invalid' %}❌ Invalid{% else %}⚠️ Error{% endif %}<br>
-        <b>User ID:</b> {{r.id if r.id else '-' }} <br>
-        <b>Name:</b> {{r.name if r.name else '-' }}
-      </div>
+      <div class="card"><b>🔑 Token:</b> {{r.token}} <br>
+      <b>Status:</b> {% if r.status == 'valid' %}✅ Valid{% elif r.status == 'invalid' %}❌ Invalid{% else %}⚠️ Error{% endif %}<br>
+      <b>User ID:</b> {{r.id if r.id else '-'}} <br><b>Name:</b> {{r.name if r.name else '-' }}</div>
     {% endfor %}
     {% endif %}
   </div>
-  <div class="footer">
-    Made with ❤️ by Harshu | <a href="https://m.me/harshuuuxd" target="_blank">📩 Contact Me</a> | <a href="{{ url_for('logout') }}">🚪 Logout</a>
+  <div class="footer">Made with ❤️ by Harshu <br><br>
+    <a href="https://m.me/harshuuuxd" target="_blank">📩 Contact Me</a>
+    <a href="{{ url_for('logout') }}">🚪 Logout</a>
   </div>
+  <script>
+    function copyAlive(){
+      var txt=document.getElementById("aliveTokens");txt.style.display="block";txt.select();
+      document.execCommand("copy");txt.style.display="none";alert("✅ Alive tokens copied!");
+    }
+  </script>
 </body>
 </html>
 """
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
+    
