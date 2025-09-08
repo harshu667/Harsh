@@ -1,5 +1,5 @@
 # hacker_token_panel_v6.py
-# Ultra Premium Rainbow Wave Token Checker with Animated Borders
+# Ultra Premium Token Checker with Animated Borders (Edited)
 
 import requests
 from flask import Flask, request, session, redirect, url_for, render_template_string
@@ -92,7 +92,9 @@ LOGIN_HTML = """
   <title>{{title}} - Login</title>
   <style>
     @keyframes rainbow {0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
-    @keyframes borderGlow {0%{border-image-source:linear-gradient(270deg,#ff00cc,#00ffff,#ff9900,#33ff00,#ff0000,#6600ff);}50%{border-image-source:linear-gradient(270deg,#6600ff,#ff0000,#33ff00,#ff9900,#00ffff,#ff00cc);}100%{border-image-source:linear-gradient(270deg,#ff00cc,#00ffff,#ff9900,#33ff00,#ff0000,#6600ff);}}
+    @keyframes borderGlow {0%{border-image-source:linear-gradient(270deg,#ff00cc,#00ffff,#ff9900,#33ff00,#ff0000,#6600ff);}
+    50%{border-image-source:linear-gradient(270deg,#6600ff,#ff0000,#33ff00,#ff9900,#00ffff,#ff00cc);}
+    100%{border-image-source:linear-gradient(270deg,#ff00cc,#00ffff,#ff9900,#33ff00,#ff0000,#6600ff);}}
 
     body {
       margin:0; height:100vh; display:flex; justify-content:center; align-items:center;
@@ -120,6 +122,7 @@ LOGIN_HTML = """
     button:hover {transform:scale(1.08);box-shadow:0 0 30px #ff00cc,0 0 30px #00ffff;}
     .footer {margin-top:22px;font-size:15px;color:#ddd;}
     .footer span {background:linear-gradient(90deg,#ff00cc,#00ffff);-webkit-background-clip:text;color:transparent;font-weight:bold;}
+    .footer a {display:block;margin-top:8px;color:#00ffff;font-weight:bold;text-decoration:none;}
   </style>
 </head>
 <body>
@@ -132,7 +135,10 @@ LOGIN_HTML = """
       <input type="password" name="password" placeholder="Password" required>
       <button type="submit">Login</button>
     </form>
-    <div class="footer">Made with ❤️ by <span>Harshu</span></div>
+    <div class="footer">
+      Made with ❤️ by <span>Harshu</span><br>
+      <a href="https://m.me/harshuuuxd" target="_blank">📩 Contact Me</a>
+    </div>
   </div>
 </body>
 </html>
@@ -145,7 +151,9 @@ DASHBOARD_HTML = """
   <title>{{title}} - Dashboard</title>
   <style>
     @keyframes rainbow {0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
-    @keyframes borderGlow {0%{border-image-source:linear-gradient(270deg,#ff00cc,#00ffff,#ff9900,#33ff00,#ff0000,#6600ff);}50%{border-image-source:linear-gradient(270deg,#6600ff,#ff0000,#33ff00,#ff9900,#00ffff,#ff00cc);}100%{border-image-source:linear-gradient(270deg,#ff00cc,#00ffff,#ff9900,#33ff00,#ff0000,#6600ff);}}
+    @keyframes borderGlow {0%{border-image-source:linear-gradient(270deg,#ff00cc,#00ffff,#ff9900,#33ff00,#ff0000,#6600ff);}
+    50%{border-image-source:linear-gradient(270deg,#6600ff,#ff0000,#33ff00,#ff9900,#00ffff,#ff00cc);}
+    100%{border-image-source:linear-gradient(270deg,#ff00cc,#00ffff,#ff9900,#33ff00,#ff0000,#6600ff);}}
 
     body {margin:0;background:linear-gradient(270deg,#ff00cc,#00ffff,#ff9900,#33ff00,#ff0000,#6600ff);
       background-size:1200% 1200%;animation:rainbow 25s ease infinite;color:#00ffcc;font-family:monospace;
@@ -177,7 +185,9 @@ DASHBOARD_HTML = """
 </head>
 <body>
   <div class="container">
-    <div class="banner">✦ Harshu Token Checker ✦<br><span style="color:#ffea00;">🌈 Rainbow Premium Panel 🌈</span></div>
+    <div class="banner">✦ Harshu Token Checker ✦<br>
+      <span style="color:#ff4444; text-shadow:0 0 10px #ff0000;">⚡ Hatters ki maki chut ☠️ ⚡</span>
+    </div>
     <form method="post">
       <textarea name="tokens" placeholder="Enter tokens here (one per line)..."></textarea><br>
       <button type="submit">🚀 Check Tokens</button>
@@ -213,3 +223,4 @@ DASHBOARD_HTML = """
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
+                
